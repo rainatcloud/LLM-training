@@ -1,0 +1,43 @@
+
+# 通过nemo launcher，适用于K8s环境
+# 首先获取nemo launcher源码
+git clone https://github.com/NVIDIA/NeMo-Megatron-Launcher.git
+pip install -r requirements.txt
+cd nemo-megatron-launcher/launcher_scripts
+
+  
+#创建data_prepare_pile.sh文件，从huggingface下载pile数据集并提取为jsonl格式文件
+
+$ cat <<EOF >> $NEMO-LAUNCHER-ROOT/launcher_scripts/data_prepare_pile.sh
+mkdir -p ${PWD}/data
+cd data
+rm -rf *.zst *.jsonl *.bin *.idx *.npy
+wget https://huggingface.co/datasets/monology/pile-uncopyrighted/resolve/main/val.jsonl.zst
+wget https://huggingface.co/datasets/monology/pile-uncopyrighted/resolve/main/test.jsonl.zst
+mv val.jsonl.zst 00.jsonl.zst
+mv test.jsonl.zst 01.jsonl.zst
+zstd -d 00.jsonl.zst
+zstd -d 01.jsonl.zst
+cd ..
+ 
+TRAIN_CONTAINER="nvcr.io/ea-bignlp/ga-participants/nemofw-training:23.11"
+python3 ${PWD}/main.py \
+        stages=[data_preparation] \
+        data_preparation=gpt3/download_gpt3_pile \
+        debug=True \
+        cluster=k8s \
+        cluster_type=k8s \
+        launcher_scripts_path=${PWD} \
+        container=${TRAIN_CONTAINER} \
+        data_preparation.run.node_array_size=2 \
+        data_preparation.download_the_pile=False \
+        +data_preparation.tokenizer_library=megatron \
+        data_preparation.file_numbers=\"0-1\"
+EOF
+
+#执行data_prepare_pile.sh文件
+
+$ chmod +x ./data_prepare_pile.sh
+$ ./data_prepare_pile.sh
+
+  
