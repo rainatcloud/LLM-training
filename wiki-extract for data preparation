@@ -5,3 +5,24 @@ wget https://dumps.wikimedia.org/enwiki/latest/enwiki-latest-pages-articles.xml.
 
 # 下载wikiextrator
 git clone https://github.com/attardi/wikiextractor.git
+
+# 安装
+cd wikiextractor
+python setup.py install
+cd wikiextractor
+
+#有如下文件：
+total 108
+-rwxr-xr-x. 1 root root  8572 Jan 10 18:40 cirrus-extract.py
+-rw-r--r--. 1 root root  1824 Jan 10 18:40 clean.py
+-rwxr-xr-x. 1 root root  3893 Jan 10 18:40 extractPage.py
+-rw-r--r--. 1 root root 64233 Jan 10 18:40 extract.py
+-rw-r--r--. 1 root root     0 Jan 10 18:40 __init__.py
+drwxr-xr-x. 2 root root   103 Jan 10 19:00 __pycache__
+-rwxr-xr-x. 1 root root 22719 Jan 10 18:40 WikiExtractor.py
+
+# extract文件如下，指定--json参数输出json格式，指定--template参数保存template以便下次做快些（可以不指定）
+python -m wikiextractor.WikiExtractor --json ../../enwiki-latest-pages-articles.xml.bz2 --templates ./template
+或
+python -m wikiextractor.WikiExtractor --json ../../enwiki-latest-pages-articles.xml.bz2--no-templates
+
