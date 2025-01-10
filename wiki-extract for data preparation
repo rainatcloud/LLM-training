@@ -1,0 +1,7 @@
+
+#这里是根据 https://github.com/NVIDIA/Megatron-LM 的说明操作的，可以参考原版英文说明
+#下载wiki dump，非常大，有几十G
+wget https://dumps.wikimedia.org/enwiki/latest/enwiki-latest-pages-articles.xml.bz2
+
+# 下载wikiextrator
+git clone https://github.com/attardi/wikiextractor.git
